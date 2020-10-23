@@ -147,35 +147,7 @@ func _rect_to_points(p_rect:Rect2) -> PoolVector2Array:
 	return PoolVector2Array([ to_global(p_rect.position), to_global(p_rect.position + Vector2(p_rect.size.x, 0.0)),  
 			to_global(p_rect.end), to_global(p_rect.position + Vector2(0.0, p_rect.size.y)) ])
 
-func _get_triangle_area(p_triangle:PoolVector2Array) -> float:
-	return abs((p_triangle[1] - p_triangle[0]).cross(p_triangle[2] - p_triangle[0]) * 0.5)
-
-func _get_triangle_interpolate(p_triangle:PoolVector2Array, p_pos:Vector2) -> Vector3:
-	if p_triangle.size() != 3:
-		return Vector3.ZERO
-	
-	var triangleArea = _get_triangle_area(p_triangle)
-	var smallAreas = []
-	for i in 3:
-		smallAreas.append(_get_triangle_area(PoolVector2Array([p_triangle[(i+1)%3], p_triangle[(i+2)%3], p_pos])))
-	
-	return Vector3(smallAreas[0] / triangleArea, smallAreas[1] / triangleArea, smallAreas[2] / triangleArea)
-
 func _clip_uvs(p_uvs:PoolVector2Array, p_texture:Texture):
-#	if p_points.size() == 3:
-#		var texPoints = [ Vector2.ZERO, Vector2(p_texture.get_size().x, 0.0), p_texture.get_size(), Vector2(0.0, p_texture.get_size().y)]
-#		var r_uvs = Geometry.intersect_polygons_2d(texPoints, p_uvs)
-#		if r_uvs.size() <= 0:
-#			return [ PoolVector2Array(), PoolVector2Array() ]
-#		r_uvs = r_uvs[0]
-#		var r_points := PoolVector2Array()
-#		r_points.resize(r_uvs.size())
-#		var interpolate
-#		for i in r_uvs.size():
-#			interpolate = _get_triangle_interpolate(p_uvs, r_uvs[i])
-#			r_points[i] = p_points[0] * interpolate.x + p_points[1] * interpolate.y + p_points[2] * interpolate.z
-#
-#		return [r_points, r_uvs]
 	var scale = rect.size / region.size
 	var texPoints = [ Vector2.ZERO, Vector2(p_texture.get_size().x, 0.0), p_texture.get_size(), Vector2(0.0, p_texture.get_size().y)]
 	var r_uvs = Geometry.intersect_polygons_2d(texPoints, p_uvs)
